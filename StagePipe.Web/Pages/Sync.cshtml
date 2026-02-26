@@ -1,0 +1,54 @@
+@page
+@model SyncModel
+@{
+    ViewData["Title"] = "StagePipe - Sync Services";
+}
+
+<h1>Sync Services</h1>
+
+<div class="panel" style="max-width: 720px;">
+    <form method="post" asp-page-handler="Run">
+        <div class="row">
+            <div>
+                <label for="SyncService">Service</label>
+                <select id="SyncService" name="SyncService">
+                    @foreach (var service in Model.AvailableSyncServices)
+                    {
+                        if (string.Equals(service.Key, Model.Sync.SelectedServiceKey, StringComparison.OrdinalIgnoreCase))
+                        {
+                            <option value="@service.Key" selected>@service.Title</option>
+                        }
+                        else
+                        {
+                            <option value="@service.Key">@service.Title</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div>
+                <label>&nbsp;</label>
+                <button type="submit">Run Sync Service</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+@if (!string.IsNullOrWhiteSpace(Model.Sync.SuccessMessage))
+{
+    <div class="ok">@Model.Sync.SuccessMessage</div>
+}
+
+@if (!string.IsNullOrWhiteSpace(Model.Sync.ErrorMessage))
+{
+    <div class="error">Sync error: @Model.Sync.ErrorMessage</div>
+}
+
+<div class="panel" style="max-width: 720px;">
+    <div class="muted">Available services:</div>
+    <ul>
+        @foreach (var service in Model.AvailableSyncServices)
+        {
+            <li><strong>@service.Title</strong> - @service.Description</li>
+        }
+    </ul>
+</div>

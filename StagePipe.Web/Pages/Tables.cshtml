@@ -1,0 +1,88 @@
+@page
+@model TablesModel
+@{
+    ViewData["Title"] = "StagePipe - Tables";
+}
+
+<h1>Show Tables</h1>
+
+<div class="panel">
+    <form method="get">
+        <div class="row">
+            <div>
+                <label for="Db">Database</label>
+                <select id="Db" name="Db">
+                    <option value="Production" selected="@(string.Equals(Model.Db, "Production", StringComparison.OrdinalIgnoreCase))">Production</option>
+                    <option value="ProductionAuth" selected="@(string.Equals(Model.Db, "ProductionAuth", StringComparison.OrdinalIgnoreCase))">ProductionAuth</option>
+                    <option value="Staging" selected="@(string.Equals(Model.Db, "Staging", StringComparison.OrdinalIgnoreCase))">Staging</option>
+                </select>
+            </div>
+            <div>
+                <label for="Table">Table</label>
+                <select id="Table" name="Table">
+                    @if (Model.Browse.Tables.Count == 0)
+                    {
+                        <option value="">No tables found</option>
+                    }
+                    else
+                    {
+                        @foreach (var table in Model.Browse.Tables)
+                        {
+                            if (string.Equals(table, Model.Table, StringComparison.OrdinalIgnoreCase))
+                            {
+                                <option value="@table" selected>@table</option>
+                            }
+                            else
+                            {
+                                <option value="@table">@table</option>
+                            }
+                        }
+                    }
+                </select>
+            </div>
+            <div>
+                <label for="Limit">Row limit</label>
+                <input id="Limit" name="Limit" type="number" min="1" max="500" value="@Model.Limit" />
+            </div>
+            <div>
+                <label>&nbsp;</label>
+                <button type="submit">Load</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+@if (!string.IsNullOrWhiteSpace(Model.Browse.BrowseError))
+{
+    <div class="error">Browse error: @Model.Browse.BrowseError</div>
+}
+
+<div class="muted">Rows: @Model.Browse.Rows.Count (max @Model.Limit)</div>
+
+@if (Model.Browse.Rows.Count > 0)
+{
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    @foreach (var column in Model.Browse.Columns)
+                    {
+                        <th>@column</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var row in Model.Browse.Rows)
+                {
+                    <tr>
+                        @foreach (var column in Model.Browse.Columns)
+                        {
+                            row.TryGetValue(column, out var value);
+                            <td>@(value?.ToString() ?? string.Empty)</td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

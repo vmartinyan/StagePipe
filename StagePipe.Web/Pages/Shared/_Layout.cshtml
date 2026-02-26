@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@(ViewData["Title"] ?? "StagePipe")</title>
+    <style>
+        body { font-family: Segoe UI, Arial, sans-serif; margin: 24px; background: #f8fafc; color: #0f172a; }
+        h1 { margin: 0 0 12px 0; }
+        .top-nav { margin-bottom: 16px; display: flex; gap: 8px; flex-wrap: wrap; }
+        .top-nav a { text-decoration: none; background: #0f172a; color: white; padding: 8px 12px; border-radius: 6px; }
+        .panel { background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; margin-bottom: 16px; }
+        .row { display: flex; gap: 12px; flex-wrap: wrap; align-items: end; }
+        label { display: block; font-size: 13px; margin-bottom: 4px; }
+        select, input, button { padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; }
+        button { background: #0f172a; color: white; cursor: pointer; }
+        button:hover { opacity: 0.92; }
+        .error { color: #b91c1c; margin-bottom: 12px; }
+        .ok { color: #166534; margin-bottom: 12px; }
+        .muted { color: #475569; font-size: 13px; }
+        table { border-collapse: collapse; width: 100%; background: white; }
+        th, td { border: 1px solid #e2e8f0; padding: 8px; text-align: left; vertical-align: top; }
+        th { background: #f1f5f9; position: sticky; top: 0; }
+        .table-wrap { overflow: auto; max-height: 70vh; border: 1px solid #e2e8f0; border-radius: 8px; }
+    </style>
+</head>
+<body>
+    <nav class="top-nav">
+        <a asp-page="/Index">Home</a>
+        <a asp-page="/Tables">Show Tables</a>
+        <a asp-page="/Sync">Sync Services</a>
+    </nav>
+
+    @RenderBody()
+</body>
+</html>

@@ -1,0 +1,11 @@
+@page
+@model ErrorModel
+@{
+    ViewData["Title"] = "Error";
+}
+
+<h1>Unexpected error</h1>
+@if (Model.ShowRequestId)
+{
+    <p>Request ID: @Model.RequestId</p>
+}
