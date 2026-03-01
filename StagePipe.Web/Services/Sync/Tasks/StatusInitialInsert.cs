@@ -3,16 +3,25 @@ using MySqlConnector;
 
 namespace StagePipe.Web.Services.Sync;
 
-public sealed class CourtCaseStatisticsStatusesToStatusTask : ISyncTask
+public sealed class StatusInitialInsert : ISyncTask
 {
-    public string Key => "CourtCaseStatisticsStatusesToStatus";
-    public string Title => "CourtCaseStatisticsStatuses -> status";
+    private readonly ISqlScriptProvider _sqlScriptProvider;
+
+    public StatusInitialInsert(ISqlScriptProvider sqlScriptProvider)
+    {
+        _sqlScriptProvider = sqlScriptProvider;
+    }
+
+    public string Key => "StatusInitialInsert";
+    public string Title => "Status initial insert";
     public string Description => "Truncate staging status table and reload Name->name, tag->slug.";
 
-    public async Task<int> ExecuteAsync(MySqlConnection productionConnection, MySqlConnection stagingConnection, CancellationToken cancellationToken)
+    public async Task<int> ExecuteAsync(MySqlConnection sourceConnection, MySqlConnection stagingConnection, CancellationToken cancellationToken)
     {
-        var sourceRows = (await productionConnection.QueryAsync(
-                "SELECT Name, tag FROM CourtCaseStatisticsStatuses",
+        var selectQuery = _sqlScriptProvider.GetScript("Sync/StatusInitialInsert.select.sql");
+
+        var sourceRows = (await sourceConnection.QueryAsync(
+            selectQuery,
                 commandTimeout: 120))
             .Cast<IDictionary<string, object>>()
             .ToList();

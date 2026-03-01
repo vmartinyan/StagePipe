@@ -11,4 +11,11 @@
     <PackageReference Include="MySqlConnector" Version="2.5.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Include="Sql\**\*.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>

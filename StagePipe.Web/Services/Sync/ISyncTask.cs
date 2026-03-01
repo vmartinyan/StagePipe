@@ -7,6 +7,7 @@ public interface ISyncTask
     string Key { get; }
     string Title { get; }
     string Description { get; }
+    string SourceDatabase => "Production";
 
-    Task<int> ExecuteAsync(MySqlConnection productionConnection, MySqlConnection stagingConnection, CancellationToken cancellationToken);
+    Task<int> ExecuteAsync(MySqlConnection sourceConnection, MySqlConnection stagingConnection, CancellationToken cancellationToken);
 }

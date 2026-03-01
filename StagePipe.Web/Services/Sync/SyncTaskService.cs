@@ -44,26 +44,27 @@ public sealed class SyncTaskService : ISyncTaskService
             return new SyncTaskResult { ErrorMessage = $"Sync service '{taskKey}' is not configured." };
         }
 
-        var productionConnectionString = _configuration.GetConnectionString("Production");
+        var sourceDatabase = string.IsNullOrWhiteSpace(task.SourceDatabase) ? "Production" : task.SourceDatabase;
+        var sourceConnectionString = _configuration.GetConnectionString(sourceDatabase);
         var stagingConnectionString = _configuration.GetConnectionString("Staging");
 
-        if (string.IsNullOrWhiteSpace(productionConnectionString) || string.IsNullOrWhiteSpace(stagingConnectionString))
+        if (string.IsNullOrWhiteSpace(sourceConnectionString) || string.IsNullOrWhiteSpace(stagingConnectionString))
         {
-            return new SyncTaskResult { ErrorMessage = "Missing Production or Staging connection string." };
+            return new SyncTaskResult { ErrorMessage = $"Missing {sourceDatabase} or Staging connection string." };
         }
 
         try
         {
-            await _sshTunnelManager.EnsureForDatabaseAsync("Production", cancellationToken);
+            await _sshTunnelManager.EnsureForDatabaseAsync(sourceDatabase, cancellationToken);
             await _sshTunnelManager.EnsureForDatabaseAsync("Staging", cancellationToken);
 
-            await using var productionConnection = new MySqlConnection(productionConnectionString);
+            await using var sourceConnection = new MySqlConnection(sourceConnectionString);
             await using var stagingConnection = new MySqlConnection(stagingConnectionString);
 
-            await productionConnection.OpenAsync(cancellationToken);
+            await sourceConnection.OpenAsync(cancellationToken);
             await stagingConnection.OpenAsync(cancellationToken);
 
-            var affectedRows = await task.ExecuteAsync(productionConnection, stagingConnection, cancellationToken);
+            var affectedRows = await task.ExecuteAsync(sourceConnection, stagingConnection, cancellationToken);
             return new SyncTaskResult { SuccessMessage = $"Service '{task.Title}' executed successfully. Rows written: {affectedRows}." };
         }
         catch (Exception ex)
