@@ -25,5 +25,5 @@ FROM
   CourtCases cc
   join CourtCaseStatisticalLines ccs on ccs.courtCaseId = cc.courtCaseId
 WHERE
-  cc.status not in('draft', 'signing')
+  cc.status NOT IN ('signing', 'draft') OR (cc.status = 'draft' AND cc.courtCaseStatisticsStatusTag = 'returned')
   

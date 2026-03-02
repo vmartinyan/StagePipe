@@ -19,10 +19,13 @@ builder.Services.AddSingleton<ISyncTask, ParticipantTypeInitialInsert>();
 builder.Services.AddSingleton<ISyncTask, ParticipantInitialInsert>();
 builder.Services.AddSingleton<ISyncTask, ClaimRequirementsInitialInsert>();
 builder.Services.AddSingleton<ISyncTask, AnswerInitialInsert>();
+builder.Services.AddSingleton<ISyncTask, ComplexityInitialInsert>();
 builder.Services.AddSingleton<ISyncTask, CourtCaseJudgeInitialInsert>();
 builder.Services.AddSingleton<ISyncTask, JudicialActInitialInsert>();
 builder.Services.AddSingleton<ISyncTask, JudicialActHistoryInitialInsert>();
 builder.Services.AddSingleton<ISyncTask, JudicialActSubTypeInitialInsert>();
+builder.Services.AddSingleton<ISyncTask, PaymentInitialInsert>();
+builder.Services.AddSingleton<ISyncTask, StateDutyInitialInsert>();
 builder.Services.AddSingleton<ISyncTaskService, SyncTaskService>();
 
 var app = builder.Build();
