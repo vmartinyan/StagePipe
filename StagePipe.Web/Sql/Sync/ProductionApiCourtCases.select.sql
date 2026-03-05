@@ -23,7 +23,7 @@ SELECT
   ccs.name as statistical_classifier
 FROM
   CourtCases cc
-  join CourtCaseStatisticalLines ccs on ccs.courtCaseId = cc.courtCaseId
+  LEFT JOIN CourtCaseStatisticalLines ccs on ccs.courtCaseId = cc.courtCaseId
 WHERE
   cc.status NOT IN ('signing', 'draft') OR (cc.status = 'draft' AND cc.courtCaseStatisticsStatusTag = 'returned')
   

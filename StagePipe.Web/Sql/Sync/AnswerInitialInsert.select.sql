@@ -5,7 +5,7 @@ SELECT
   cca.publishedAt as published_at
 FROM
   CourtCaseAnswers cca
-  JOIN CourtCases cc ON cc.courtCaseId = cca.courtCaseId
+  LEFT JOIN CourtCases cc ON cc.courtCaseId = cca.courtCaseId
 WHERE
   cca.status = 'published'
   AND cc.status not in('draft', 'signing')

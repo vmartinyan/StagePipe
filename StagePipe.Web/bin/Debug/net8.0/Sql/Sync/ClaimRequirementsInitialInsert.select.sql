@@ -4,7 +4,7 @@ SELECT
   cr.description
 FROM
   ClaimRequirements cr
-  JOIN CourtCases cc ON cc.courtCaseId = cr.courtCaseId
+  LEFT JOIN CourtCases cc ON cc.courtCaseId = cr.courtCaseId
 WHERE
   cc.status not in('draft', 'signing')
   AND cr.type = 'demand'

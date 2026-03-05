@@ -19,8 +19,8 @@ SELECT
 		ELSE ''
 	END as instance_id
 FROM users u
-JOIN user_role ur
+LEFT JOIN user_role ur
     ON ur.user_id = u.id
-JOIN profiles p
+LEFT JOIN profiles p
     ON p.id = u.profile_id
 WHERE ur.system_role_id = 1;

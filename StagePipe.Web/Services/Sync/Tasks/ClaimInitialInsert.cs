@@ -53,18 +53,19 @@ public sealed class ClaimInitialInsert : ISyncTask
             {
                 var courtCaseApiId = GetValue(row, "court_case_id_api")?.ToString();
                 var hasMappedCourtCase = courtCaseApiId is not null && courtCaseIdByApiId.ContainsKey(courtCaseApiId);
+                var courtCaseId = hasMappedCourtCase ? courtCaseIdByApiId[courtCaseApiId!] : null;
 
                 return new
                 {
-                    court_case_id_api = courtCaseApiId,
+                    court_case_id = courtCaseId,
                     has_mapped_court_case = hasMappedCourtCase,
                     title = GetValue(row, "title")?.ToString(),
                     description = StripHtmlToText(GetValue(row, "description")?.ToString()),
-                    unique_key = courtCaseApiId
+                    unique_key = courtCaseId
                 };
             })
-            .Where(x => x.has_mapped_court_case && !string.IsNullOrWhiteSpace(x.court_case_id_api))
-            .GroupBy(x => x.unique_key!, StringComparer.OrdinalIgnoreCase)
+            .Where(x => x.has_mapped_court_case && x.court_case_id is not null)
+            .GroupBy(x => x.unique_key)
             .Select(group =>
             {
                 var selected = group
@@ -74,7 +75,7 @@ public sealed class ClaimInitialInsert : ISyncTask
 
                 return new
                 {
-                    selected.court_case_id_api,
+                    selected.court_case_id,
                     selected.title,
                     selected.description
                 };
@@ -84,15 +85,15 @@ public sealed class ClaimInitialInsert : ISyncTask
         if (insertRows.Count > 0)
         {
             await stagingConnection.ExecuteAsync(
-                @"INSERT INTO `claim` (`court_case_id_api`, `title`, `description`)
-                  VALUES (@court_case_id_api, @title, @description);",
+                                @"INSERT INTO `claim` (`court_case_id`, `title`, `description`)
+                                    VALUES (@court_case_id, @title, @description);",
                 insertRows,
                 commandTimeout: 180);
         }
 
         await stagingConnection.ExecuteAsync(
                 @"UPDATE `court_case` cc
-                            JOIN `claim` c ON c.`court_case_id_api` = cc.`id_api`
+                                                        JOIN `claim` c ON c.`court_case_id` = cc.`id`
                             SET cc.`claim_id` = c.`id`;",
                 commandTimeout: 180);
 

@@ -11,8 +11,8 @@ SELECT
   ccp.leavedAt AS leaved_at
 FROM
   CourtCaseParticipants ccp
-  JOIN CourtCaseParticipantTypes t ON t.courtCaseParticipantTypeId = ccp.courtCaseParticipantTypeId
-  JOIN Citizens c ON c.citizenId = ccp.memberId
-  JOIN Corporations corp ON corp.corporationId = ccp.memberId
+  LEFT JOIN CourtCaseParticipantTypes t ON t.courtCaseParticipantTypeId = ccp.courtCaseParticipantTypeId
+  LEFT JOIN Citizens c ON c.citizenId = ccp.memberId
+  LEFT JOIN Corporations corp ON corp.corporationId = ccp.memberId
 WHERE
   ccp.courtCaseParticipantTypeId IN (1, 2, 3, 4)

@@ -26,6 +26,7 @@ builder.Services.AddSingleton<ISyncTask, JudicialActHistoryInitialInsert>();
 builder.Services.AddSingleton<ISyncTask, JudicialActSubTypeInitialInsert>();
 builder.Services.AddSingleton<ISyncTask, PaymentInitialInsert>();
 builder.Services.AddSingleton<ISyncTask, StateDutyInitialInsert>();
+builder.Services.AddSingleton<ISyncTask, CourtCaseUpdate>();
 builder.Services.AddSingleton<ISyncTaskService, SyncTaskService>();
 
 var app = builder.Build();

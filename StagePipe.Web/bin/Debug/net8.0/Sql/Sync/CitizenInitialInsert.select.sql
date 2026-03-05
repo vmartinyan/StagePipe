@@ -10,4 +10,4 @@ SELECT
   p.gender
 FROM
   Citizens c
-  JOIN Profiles p ON p.profileId = c.profileId
+  LEFT JOIN Profiles p ON p.profileId = c.profileId

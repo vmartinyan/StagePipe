@@ -4,7 +4,7 @@ select
 	c.description
 from
 	CourtCases cc
-join Claims c on
+left join Claims c on
 	c.claimId = cc.claimId
 where
 	cc.status not in('draft', 'signing')
